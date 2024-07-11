@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { sliderItems } from '../data';
+import { mobile } from '../Responsive';
 const Container = styled.div`
 width:100%;
 height:100vh;
 display:flex;
 position:relative;
 overflow:hidden;
+${mobile({display:"none"})};
 `
 const Arrow = styled.div`
 width:50px;
@@ -27,6 +30,8 @@ margin:auto;
 const Wrapper = styled.div`
 height:100%;
 display:flex;
+transform:translateX(${props=>props.slideIndex*-100}vw);
+transition:all 1.5s ease;
 
 `
 const Slide = styled.div`
@@ -34,6 +39,7 @@ width:100vw;
 height:100vh;
 display:flex;
 align-items:center;
+background-color:#${props => props.bg};
 `
 const ImageContainer = styled.div`
 height:100%;
@@ -66,45 +72,37 @@ cursor:pointer;
 
 
 const Slider = () => {
+    const [slideIndex, setSlideIndex] = useState(0);
+    const handleClick = (direction) => {
+        if (direction === "left") {
+            setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2)
+        } else {
+            setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0)
+        }
+
+    }
     return (
         <Container>
-            <Arrow direction="left">
+            <Arrow direction="left" onClick={() => handleClick("left")}>
 
                 <ArrowBackIosNewOutlinedIcon />
             </Arrow>
-            <Wrapper>
-                <Slide bg="f5fa5d">
-                    <ImageContainer>
-                        <Image src='https://www.pexels.com/photo/handsome-men-sitting-on-chairs-6615607/' />
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>SUMMER SALE</Title>
-                        <Desc>this product is widely saled product hurry up</Desc>
-                        <Button>shop now</Button>
-                    </InfoContainer>
-                </Slide>
-                <Slide bg="f5fa5d">
-                    <ImageContainer>
-                        <Image src='https://images.pexels.com/photos/10948501/pexels-photo-10948501.jpeg?auto=compress&cs=tinysrgb&w=600' />
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>WINTER SALE</Title>
-                        <Desc>this product is widely saled product hurry up</Desc>
-                        <Button>shop now</Button>
-                    </InfoContainer>
-                </Slide>
-                <Slide bg="f5fa5d">
-                    <ImageContainer>
-                        <Image src='https://images.pexels.com/photos/10948501/pexels-photo-10948501.jpeg?auto=compress&cs=tinysrgb&w=600' />
-                    </ImageContainer>
-                    <InfoContainer>
-                        <Title>POPULAR SALE</Title>
-                        <Desc>This product is widely saled product hurry up</Desc>
-                        <Button>SHOP NOW</Button>
-                    </InfoContainer>
-                </Slide>
+            <Wrapper slideIndex={slideIndex}>
+                {sliderItems.map((item) => (
+                    <Slide bg={item.bg} key={item.id}>
+                        <ImageContainer>
+                            <Image src={item.img} />
+                        </ImageContainer>
+                        <InfoContainer>
+                            <Title>{item.title}</Title>
+                            <Desc>{item.desc}</Desc>
+                            <Button>shop now</Button>
+                        </InfoContainer>
+                    </Slide>
+                ))}
+
             </Wrapper>
-            <Arrow direction="right">
+            <Arrow direction="right" onClick={() => handleClick("right")}>
 
                 <ArrowForwardIosOutlinedIcon />
             </Arrow>
