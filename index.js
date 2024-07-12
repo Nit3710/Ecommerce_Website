@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require("mongoose");
 const app = express();
-
+const cors=require('cors');
 // extracting the environment variable
 const dotenv = require('dotenv');
 dotenv.config();
@@ -25,6 +25,7 @@ app.get("/api/test", (req, res) => {
 
 // allow routes middleware
 app.use(express.json())
+app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
